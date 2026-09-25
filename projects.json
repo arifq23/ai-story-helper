@@ -1,0 +1,42 @@
+[
+    {
+        "name": "MainframeMod",
+        "applications": 50,
+        "completed": 30,
+        "remaining": 20,
+        "progress": 60.0,
+        "status": "Work still remaining"
+    },
+    {
+        "name": "MainframeMod",
+        "applications": 30,
+        "completed": 20,
+        "remaining": 10,
+        "progress": 66.66666666666666,
+        "status": "Work still remaining"
+    },
+    {
+        "name": "Main",
+        "applications": 20,
+        "completed": 10,
+        "remaining": 10,
+        "progress": 50.0,
+        "status": "Work still remaining"
+    },
+    {
+        "name": "Main",
+        "applications": 4010,
+        "completed": 201,
+        "remaining": 3809,
+        "progress": 5.012468827930175,
+        "status": "Work still remaining"
+    },
+    {
+        "name": "NeoX",
+        "applications": 40,
+        "completed": 7,
+        "remaining": 33,
+        "progress": 17.5,
+        "status": "Work still remaining"
+    }
+]
