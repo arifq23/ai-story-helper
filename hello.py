@@ -1,2 +1,3 @@
 print("Hello Arif!")
-print("New 11 I am learning Git, GitHub and AI.")
+print("I am learning Git, GitHub and AI.")
+print("I am now working on my first feature branch.")
