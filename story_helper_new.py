@@ -46,9 +46,14 @@ def analyse_story(story):
 
 
 
-print(analysis)
 
-print(analysis["role"])
-print(analysis["goal"])
-print(analysis["benefit"])
-print(analysis["score"])
+print("AI STORY HELPER")
+print("----------------")
+story = input("Enter your user story: ")
+
+print("Your Story:")
+print(story)
+
+StoryAnalysis = analyse_story(story)
+
+print(StoryAnalysis)
