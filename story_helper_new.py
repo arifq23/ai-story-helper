@@ -1,3 +1,4 @@
+import json
 def analyse_story(story):
     score = 0
     is_valid = False
@@ -135,6 +136,38 @@ def generate_test_cases(analysis):
 
     return test_cases
 
+def build_story_report(story, analysis, acceptance_criteria, test_cases):
+
+    report = {
+        "story": story.strip(),
+        "analysis": analysis,
+        "acceptance_criteria": acceptance_criteria,
+        "test_cases": test_cases
+    }
+
+    return report
+
+def save_story_report(report, filename):
+
+    with open(filename, "w") as file:
+        json.dump(report, file, indent=4)
+
+def load_story_report(filename):
+
+    try:
+        with open(filename, "r") as file:
+            report = json.load(file)
+
+        return report
+
+    except FileNotFoundError:
+        print("Error: Report file not found.")
+        return None
+
+    except json.JSONDecodeError:
+        print("Error: Report file contains invalid JSON.")
+        return None
+
 print("AI STORY HELPER")
 print("----------------")
 with open("story.txt", "r") as file:
@@ -143,9 +176,11 @@ print("Your Story:")
 print(story)
 
 story_analysis = analyse_story(story)
-
 acceptance_criteria = generate_acceptance_criteria(story_analysis)
 test_cases = generate_test_cases(story_analysis)
+story_report = build_story_report(story, story_analysis, acceptance_criteria, test_cases)
+save_story_report(story_report, "story_report.json")
+loaded_report = load_story_report("story_report.json")  # Change the filename to "story_report.json" to load the correct report
 
 print()
 print("ACCEPTANCE CRITERIA")
@@ -175,3 +210,23 @@ for number, test_case in enumerate(test_cases, start=1):
     print("Type:", test_case["type"])
     print("Scenario:", test_case["scenario"])
     print("Expected Result:", test_case["expected_result"])
+
+if loaded_report is not None:
+    print()
+    print("STRUCTURED STORY REPORT")
+    print("-----------------------")
+    print(loaded_report)
+
+    print()
+    print("LOADED REPORT")
+    print("-------------")
+
+    print("Story:", loaded_report["story"])
+    print("Role:", loaded_report["analysis"]["role"])
+    print("Goal:", loaded_report["analysis"]["goal"])
+    print("Valid:", loaded_report["analysis"]["is_valid"])
+    print()
+    print("TEST CASES FROM JSON")
+
+    for test_case in loaded_report["test_cases"]:
+        print("-", test_case["type"], ":", test_case["scenario"])
