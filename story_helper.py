@@ -25,7 +25,6 @@ def analyse_story(story):
 
 print("AI STORY HELPER")
 print("----------------")
-
 story = input("Enter your user story: ")
 print()
 print("Your Story:")
