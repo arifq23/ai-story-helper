@@ -16,6 +16,8 @@ def analyse_story(story):
 
     if want_position != -1 and benefit_position != -1:
         goal = story[want_position + len("i want"):benefit_position].strip()
+
+    if benefit_position != -1:
         benefit = story[benefit_position + len("so that"):].strip()
 
     if "as a" in story_lower:
@@ -54,6 +56,13 @@ story = input("Enter your user story: ")
 print("Your Story:")
 print(story)
 
-StoryAnalysis = analyse_story(story)
+story_analysis = analyse_story(story)
 
-print(StoryAnalysis)
+print()
+print("STORY ANALYSIS")
+print("----------------")
+
+print("Role:", story_analysis["role"])
+print("Goal:", story_analysis["goal"])
+print("Benefit:", story_analysis["benefit"])
+print("Score:", story_analysis["score"], "/ 3")
