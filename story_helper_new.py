@@ -12,8 +12,7 @@ def analyse_story(story):
     benefit_position = story.lower().find("so that")
 
     if role_position != -1 and want_position != -1:
-        role = story[role_position + len("as a"):want_position].strip()
-
+        role = story[role_position + len("as a"):want_position].strip(" ,")
     if want_position != -1 and benefit_position != -1:
         goal = story[want_position + len("i want"):benefit_position].strip()
 
@@ -46,23 +45,48 @@ def analyse_story(story):
 
     return analysis
 
+def generate_acceptance_criteria(analysis):
 
+    given = f"Given I am a {analysis['role']}"
+    when = f"When I want {analysis['goal']}"
+    then = f"Then {analysis['benefit']}"
+
+    criterion = {
+        "given": given,
+        "when": when,
+        "then": then
+    }
+
+    criterion_2 = {
+        "given": "Given the requested action is available",
+        "when": f"When the user attempts {analysis['goal']}",
+        "then": f"Then {analysis['benefit']}"
+    }
+    acceptance_criteria = [
+        criterion,
+        criterion_2
+    ]
+
+    return acceptance_criteria
 
 
 print("AI STORY HELPER")
 print("----------------")
 story = input("Enter your user story: ")
-
 print("Your Story:")
 print(story)
 
 story_analysis = analyse_story(story)
 
-print()
-print("STORY ANALYSIS")
-print("----------------")
+acceptance_criteria = generate_acceptance_criteria(story_analysis)
 
-print("Role:", story_analysis["role"])
-print("Goal:", story_analysis["goal"])
-print("Benefit:", story_analysis["benefit"])
-print("Score:", story_analysis["score"], "/ 3")
+print()
+print("ACCEPTANCE CRITERIA")
+print("-------------------")
+
+for number, criterion in enumerate(acceptance_criteria, start=1):
+    print()
+    print("Criterion", number)
+    print(criterion["given"])
+    print(criterion["when"])
+    print(criterion["then"])
