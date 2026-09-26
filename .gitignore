@@ -3,6 +3,7 @@
 
 # Local project test data
 projects.txt
+story.txt
 
 # Python generated files
 __pycache__/
