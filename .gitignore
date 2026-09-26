@@ -1,1 +1,12 @@
-project.txt
+# macOS generated file
+.DS_Store
+
+# Local project test data
+projects.txt
+
+# Python generated files
+__pycache__/
+*.pyc
+
+# Environment variables / secrets
+.env
