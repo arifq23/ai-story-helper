@@ -1,52 +1,128 @@
-def analyse_story(story):
-    score = 0
 
-    story_lower = story.lower()
+from story_analyser import analyse_story
+from generators import generate_acceptance_criteria, generate_test_cases
+from report_manager import build_story_report, save_story_report, load_story_report
+from ai_service import enhance_story_with_ai
 
-    if "as a" in story_lower:
-        print("Role section: Found")
-        score += 1
+def main():
+    print("AI STORY HELPER")
+    print("----------------")
+    with open("story.txt", "r") as file:
+        story = file.read()
+    print("Your Story:")
+    print(story)
+
+    story_analysis = analyse_story(story)
+    acceptance_criteria = generate_acceptance_criteria(story_analysis)
+    test_cases = generate_test_cases(story_analysis)
+    ai_result = enhance_story_with_ai(story)
+    if ai_result["status"] == "success":
+        ai_enhancement = ai_result["message"].model_dump()
     else:
-        print("Role section: Missing - consider adding 'As a <role>'")
+        ai_enhancement = {
+        "status": "unavailable",
+        "reason": ai_result["message"]
+    }
 
-    if "i want" in story_lower:
-        print("Goal section: Found")
-        score += 1
+    story_report = build_story_report(story, story_analysis, acceptance_criteria, test_cases, ai_enhancement)
+    save_story_report(story_report, "story_report.json")
+    loaded_report = load_story_report("story_report.json")  # Change the filename to "story_report.json" to load the correct report
+
+    print()
+    print("ACCEPTANCE CRITERIA")
+    print("-------------------")
+
+    if not acceptance_criteria:
+        print("Cannot generate acceptance criteria.")
+
+        for error in story_analysis["validation_errors"]:
+            print("-", error)
+
     else:
-        print("Goal section: Missing - consider adding 'I want to <goal>'")
+        for number, criterion in enumerate(acceptance_criteria, start=1):
+            print()
+            print("Criterion", number)
+            print(criterion["given"])
+            print(criterion["when"])
+            print(criterion["then"])
 
-    if "so that" in story_lower:
-        print("Benefit section: Found")
-        score += 1
-    else:
-        print("Benefit section: Missing - consider adding 'So that <benefit>'")
-    
-    return score
+    print()
+    print("TEST CASES")
+    print("-------------------")
 
-print("AI STORY HELPER")
-print("----------------")
-story = input("Enter your user story: ")
-print()
-print("Your Story:")
-print(story)
-words = story.split()
-print("Characters:", len(story))
-print("Words:", len(words))
-score = analyse_story(story)
-print("Story Score:", score, "/ 3")
+    for number, test_case in enumerate(test_cases, start=1):
+        print()
+        print("Test Case", number)
+        print("Type:", test_case["type"])
+        print("Scenario:", test_case["scenario"])
+        print("Expected Result:", test_case["expected_result"])
 
-role_position = story.lower().find("as a")
-want_position = story.lower().find("i want")
-benefit_position = story.lower().find("so that")
+    if loaded_report is not None:
+        print()
+        print("STRUCTURED STORY REPORT")
+        print("-----------------------")
+        print(loaded_report)
 
-print("Role position:", role_position)
-print("Goal position:", want_position)
-print("Benefit position:", benefit_position)
+        print()
+        print("LOADED REPORT")
+        print("-------------")
 
-role = story[role_position + len("as a"):want_position]
-goal = story[want_position + len("i want"):benefit_position]
-benefit = story[benefit_position + len("so that"):]
+        print("Story:", loaded_report["story"])
+        print("Role:", loaded_report["analysis"]["role"])
+        print("Goal:", loaded_report["analysis"]["goal"])
+        print("Valid:", loaded_report["analysis"]["is_valid"])
+        print()
+        print("TEST CASES FROM JSON")
 
-print("Role:", role.strip())
-print("Goal:", goal.strip())
-print("Benefit:", benefit.strip())
+        for test_case in loaded_report["test_cases"]:
+            print("-", test_case["type"], ":", test_case["scenario"])
+
+        print()
+        print("AI DATA FROM JSON")
+        print("-----------------")
+
+        print("Improved Story:")
+        print(loaded_report["ai_enhancement"]["improved_story"])
+
+        print()
+        print("AI Suggestions:")
+
+        for suggestion in loaded_report["ai_enhancement"]["suggestions"]:
+            print("-", suggestion)
+
+
+
+
+
+
+        print()
+        print("AI ENHANCEMENT")
+        print("--------------")
+        print("Status:", ai_result["status"])
+        if ai_result["status"] == "success":
+            enhancement = ai_result["message"]
+
+            print()
+            print("IMPROVED STORY")
+            print(enhancement.improved_story)
+
+            print()
+            print("SUGGESTIONS")
+            for suggestion in enhancement.suggestions:
+                print("-", suggestion)
+
+            print()
+            print("AI ACCEPTANCE CRITERIA")
+            for criterion in enhancement.acceptance_criteria:
+                print("-", criterion)
+
+            print()
+            print("AI EDGE CASES")
+            for edge_case in enhancement.edge_cases:
+                print("-", edge_case)
+        else:
+            print("AI enhancement unavailable.")
+            print("Reason:", ai_result["message"])
+            
+if __name__ == "__main__":
+    main()
