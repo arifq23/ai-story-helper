@@ -1,11 +1,12 @@
 import json
-def build_story_report(story, analysis, acceptance_criteria, test_cases):
+def build_story_report(story, analysis, acceptance_criteria, test_cases, ai_enhancement):
 
     report = {
         "story": story.strip(),
         "analysis": analysis,
         "acceptance_criteria": acceptance_criteria,
-        "test_cases": test_cases
+        "test_cases": test_cases,
+        "ai_enhancement": ai_enhancement
     }
 
     return report

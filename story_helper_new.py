@@ -15,7 +15,16 @@ def main():
     story_analysis = analyse_story(story)
     acceptance_criteria = generate_acceptance_criteria(story_analysis)
     test_cases = generate_test_cases(story_analysis)
-    story_report = build_story_report(story, story_analysis, acceptance_criteria, test_cases)
+    ai_result = enhance_story_with_ai(story)
+    if ai_result["status"] == "success":
+        ai_enhancement = ai_result["message"].model_dump()
+    else:
+        ai_enhancement = {
+        "status": "unavailable",
+        "reason": ai_result["message"]
+    }
+
+    story_report = build_story_report(story, story_analysis, acceptance_criteria, test_cases, ai_enhancement)
     save_story_report(story_report, "story_report.json")
     loaded_report = load_story_report("story_report.json")  # Change the filename to "story_report.json" to load the correct report
     ai_result = enhance_story_with_ai(story)
@@ -70,10 +79,51 @@ def main():
             print("-", test_case["type"], ":", test_case["scenario"])
 
         print()
+        print("AI DATA FROM JSON")
+        print("-----------------")
+
+        print("Improved Story:")
+        print(loaded_report["ai_enhancement"]["improved_story"])
+
+        print()
+        print("AI Suggestions:")
+
+        for suggestion in loaded_report["ai_enhancement"]["suggestions"]:
+            print("-", suggestion)
+
+
+
+
+
+
+        print()
         print("AI ENHANCEMENT")
         print("--------------")
         print("Status:", ai_result["status"])
-        print("Message:", ai_result["message"])
+        if ai_result["status"] == "success":
+            enhancement = ai_result["message"]
 
+            print()
+            print("IMPROVED STORY")
+            print(enhancement.improved_story)
+
+            print()
+            print("SUGGESTIONS")
+            for suggestion in enhancement.suggestions:
+                print("-", suggestion)
+
+            print()
+            print("AI ACCEPTANCE CRITERIA")
+            for criterion in enhancement.acceptance_criteria:
+                print("-", criterion)
+
+            print()
+            print("AI EDGE CASES")
+            for edge_case in enhancement.edge_cases:
+                print("-", edge_case)
+        else:
+            print("AI enhancement unavailable.")
+            print("Reason:", ai_result["message"])
+            
 if __name__ == "__main__":
     main()
