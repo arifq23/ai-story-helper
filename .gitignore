@@ -5,6 +5,7 @@
 projects.txt
 story.txt
 story_report.json
+test-report.json
 
 # Python generated files
 __pycache__/
