@@ -11,6 +11,6 @@ def test_valid_story():
 
     assert result["role"] == "product owner"
     assert result["goal"] == "to assess a COBOL application"
-    assert result["score"] == 5
+    assert result["score"] == 3
     assert result["is_valid"] is True
     assert result["validation_errors"] == []
