@@ -48,3 +48,15 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ai-story-helper:${{ github.sha }} .
+
+      - name: Start Docker container
+        run: |
+          docker run -d \
+            --name ai-story-helper \
+            -p 8000:8000 \
+            ai-story-helper:${{ github.sha }}
+
+      - name: Verify container health
+        run: |
+          sleep 5
+          curl --fail http://localhost:8000/health
