@@ -65,6 +65,18 @@ jobs:
           sleep 5
           curl --fail http://localhost:8000/health
 
+      - name: Inspect GitHub OIDC claims
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('sts.amazonaws.com')
+            const payload = JSON.parse(
+              Buffer.from(token.split('.')[1], 'base64url').toString()
+            )
+            console.log('OIDC aud:', payload.aud)
+            console.log('OIDC sub:', payload.sub)
+
       - name: Configure AWS credentials
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v6.3.0
